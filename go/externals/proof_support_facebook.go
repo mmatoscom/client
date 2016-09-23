@@ -39,17 +39,16 @@ func (rc *FacebookChecker) CheckHint(ctx libkb.ProofContext, h libkb.SigHint) li
 	}
 
 	wantedURL := ("https://m.facebook.com/" + strings.ToLower(rc.proof.GetRemoteUsername()) + "/posts/")
-	wantedMediumID := "on Keybase.io. " + rc.proof.GetSigID().ToMediumID()
-
 	if !strings.HasPrefix(strings.ToLower(h.GetAPIURL()), wantedURL) {
 		return libkb.NewProofError(keybase1.ProofStatus_BAD_API_URL,
 			"Bad hint from server; URL should start with '%s', received '%s'", wantedURL, h.GetAPIURL())
 	}
 
 	// TODO: We could ignore this portion of the server's hint. Should we?
-	if !strings.Contains(h.GetCheckText(), wantedMediumID) {
+	wantedCheckText := "Verifying myself: I am " + rc.proof.GetUsername() + " on Keybase.io. " + rc.proof.GetSigID().ToMediumID()
+	if h.GetCheckText() != wantedCheckText {
 		return libkb.NewProofError(keybase1.ProofStatus_BAD_SIGNATURE,
-			"Bad proof-check text from server; need '%s' as a substring, received '%s'", wantedMediumID, h.GetCheckText())
+			"Bad proof-check text from server; need '%s', received '%s'", wantedCheckText, h.GetCheckText())
 	}
 
 	return nil
