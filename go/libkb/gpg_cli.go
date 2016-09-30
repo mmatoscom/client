@@ -348,10 +348,11 @@ func (g *GpgCLI) MakeCmd(args []string) *exec.Cmd {
 	if g.G().Service {
 		nargs = append([]string{"--no-tty"}, nargs...)
 	}
-	g.logUI.Debug("| running Gpg: %s %v", g.path, nargs)
+	g.logUI.Debug("| running Gpg: %s %s", g.path, strings.Join(nargs, " "))
 	ret := exec.Command(g.path, nargs...)
 	if g.tty != "" {
 		ret.Env = append(os.Environ(), "GPG_TTY="+g.tty)
+		g.logUI.Debug("| setting GPG_TTY=%s", g.tty)
 	}
 	return ret
 }
