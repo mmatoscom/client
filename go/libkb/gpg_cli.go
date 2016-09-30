@@ -356,8 +356,8 @@ func (g *GpgCLI) MakeCmd(args []string, tty string) *exec.Cmd {
 		tty = g.tty
 	}
 	if tty != "" {
-		ret.Env = append(os.Environ(), "GPG_TTY="+g.tty)
-		g.logUI.Debug("| setting GPG_TTY=%s", g.tty)
+		ret.Env = append(os.Environ(), "GPG_TTY="+tty)
+		g.logUI.Debug("| setting GPG_TTY=%s", tty)
 	}
 	return ret
 }
